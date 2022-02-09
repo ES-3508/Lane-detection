@@ -36,8 +36,7 @@ def drow_the_lines(img, lines):
     img = cv2.addWeighted(img, 0.8, blank_image, 1, 0.0)
     return img
     
-    #lines[0,0,0],lines[0,0,1],lines[0,0,2],lines[0,0,3]
-
+    
     
 
 def linedetect(image):
@@ -56,13 +55,13 @@ def linedetect(image):
    
 
 #To get center line points
-image = cv2.imread('image10.jpg')
+image = cv2.imread("Image path")
 lines=linedetect(image)
 x_1, y_1, x_2, y_2=lines[0,0,0],lines[0,0,1],lines[0,0,2],lines[0,0,3]
 
 
 # load a video
-video = cv2.VideoCapture('avc_DJI_0085_1.mp4')
+video = cv2.VideoCapture('video path')
 
 # You can set custom kernel size if you want.
 kernel = None
@@ -84,11 +83,10 @@ while True:
     
     # Apply the background object on the frame to get the segmented mask. 
     fgmask = backgroundObject.apply(frame)
-    #initialMask = fgmask.copy()
     
     # Perform thresholding to get rid of the shadows.
     _, fgmask = cv2.threshold(fgmask, 250, 255, cv2.THRESH_BINARY)
-    #noisymask = fgmask.copy()
+   
     
     # Apply some morphological operations to make sure you have a good mask
     fgmask = cv2.erode(fgmask, kernel, iterations = 1)
@@ -113,11 +111,6 @@ while True:
 
             if lines is not None:
                 x_1, y_1, x_2, y_2=lines[0,0,0],lines[0,0,1],lines[0,0,2],lines[0,0,3]
-
-
-
-            #cv2.line(blank_image, (lines[0, 0, 0], lines[0, 0, 1]), (lines[0, 0, 2], lines[0, 0, 3]), (0, 255, 0),
-                        # thickness=2)
             
             
             
@@ -133,23 +126,15 @@ while True:
             if(l>r):
                 r=m*(x+10)+c
                 l=y-10
-                #print(1)
+                
                 if(l<r):
-                    #print(2)
+                    
                     cv2.rectangle(frameCopy, (x , y), (x + width, y + height),(0, 0,255), 2)
-                    # Write Car Detected near the bounding box drawn.
                     cv2.putText(frameCopy, 'Car Detected', (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0,255,0), 1, cv2.LINE_AA)
                     current_time = datetime.datetime.now()
                     txt='capture/'+ str(current_time.hour) + str(current_time.minute) +str(current_time.second) +'.jpg'
-                    
-                    #print(filename)
                     cv2.imwrite(txt, frameCopy)
                     
-                
-            
-                
-            
-    
     # Extract the foreground from the frame using the segmented mask.
     foregroundPart = cv2.bitwise_and(frame, frame, mask=fgmask)
     
@@ -164,7 +149,6 @@ while True:
     except :
         framen = frame.copy()
     
-    #frameCopyn = drow_the_lines(frameCopy, lines)
     cv2.imshow('Detection', framen)
     # Stack the original frame, extracted foreground, and annotated frame. 
     #stacked = np.hstack((frame, foregroundPart, frameCopyn))
